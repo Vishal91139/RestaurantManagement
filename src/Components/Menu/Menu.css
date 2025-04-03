@@ -1,0 +1,81 @@
+.menuItem {
+    border: 2px solid #e5e7eb;  
+    border-radius: 0.75rem; 
+    width: 280px;              
+    padding: 1rem;              
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.menuItem:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+    cursor:pointer;
+}
+
+.card-price::after {
+    content:"";
+    position: absolute;
+    background-color: #ff6200;
+    border-radius: 50%;
+    top: -30px; 
+    right: -30px;
+    width:95px;
+    height:95px;
+    z-index:-1;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.rating:not(:checked) > input {
+  display: none;
+}
+
+.rating:not(:checked) > label {
+  cursor: pointer;
+  font-size: 22px;
+  color: #ddd;
+}
+
+.rating:not(:checked) > label:before {
+  content: '★';
+}
+
+.rating > input:checked ~ label {
+  color: #ff6200
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #ff6200
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+  color: #ff6200
+}
+
+.cart_button {
+    border: 2px solid #ff6200;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.cart_button:hover {
+    background-color: #ff6200;
+    color: white;
+    border:none;
+}
