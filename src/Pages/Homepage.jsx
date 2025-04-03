@@ -21,7 +21,7 @@ const Homepage = () => {
       const activeIndex = Menu.findIndex((item) => item.section_name === activeSection);
       if (menuRefs.current[activeIndex]) {
         menuRefs.current[activeIndex].scrollIntoView({
-          behavior: "smooth",
+          // behavior: "smooth",
           block: "nearest",
           inline: "center", 
         });
@@ -116,7 +116,7 @@ const Homepage = () => {
     </div>
 
 
-    <div className='h-screen bg-amber-100 overflow-hidden'>
+    <div className='h-screen bg-amber-100'>
       <div className='text-scroll flex space-x-40 items-end flex-nowrap h-[35%] overflow-x-auto overflow-y-hidden px-168'>
         { Menu.length ? Menu.map((section, index) => {
            return (

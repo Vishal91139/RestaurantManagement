@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
 import './Menu.css'
 import CartPage from '../../Pages/CartPage';
+import { useCart } from '../../Context/CartContext';
 
 const MenuItem = ({items}) => {
   const [rating, setRating] = useState(4);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart(items);
+    alert(`Added ${items.name} to cart!`);
+};
 
   return (
     <>
@@ -62,9 +69,7 @@ const MenuItem = ({items}) => {
       <p className='text-sm text-gray-500'>{items.description}</p>
       <p className='card-price absolute top-0 right-0 text-white font-bold p-3 text-sm'>${items.price}</p>
       <button
-       onClick={() => {
-        <CartPage item={items.name} />
-        alert(`Added ${items.name} to cart!`)}}
+       onClick={handleAddToCart}
        className='cart_button'>Add to cart</button>
     </div>
     </>
