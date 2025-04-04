@@ -1,4 +1,7 @@
 import React from 'react'
+import landingPage from '../../assets/Images/restaurant-interior.jpg'
+import wavy from '../../assets/Icons/wavy.png'
+import down from '../../assets/Icons/down.png'
 
 const LandingPage = () => {
   return (

@@ -129,20 +129,38 @@ animation: button 70s linear infinite reverse;
   }
 
   .menu-container {
-    scroll-snap-type: x mandatory;
+    width:100%;
+    height:40vh;
+    /* scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    transition: scroll-behavior 2s ease; */
   }
   
   .menu-item {
+    width:20vw;
+    height:30vh;
     scroll-snap-align: center;
-    transition: transform 0.3s ease;
+    transition: transform 2s ease;
     transform-origin: center;
   }
   
   .menu-item.active {
-    width:380px;
-    height:250px;
-    transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+    width:26vw;
+    height:38vh;
+    /* transition: transform 1s ease, width 0.5s ease, height 0.5s ease, font-size 0.5s ease; */
   }
 
+  .menu-item.active img {
+    width:110px;
+    height:110px;
+  }
+
+  .menu-item.active h1{
+    font-size: 24px;
+  }
+
+  .menu-item.active p{
+    font-size:medium;
+    width:24vw;
+  }
   
