@@ -1,4 +1,4 @@
-import React, { use } from 'react'
+import React from 'react'
 import closeIcon from '../assets/Icons/close.png'
 import { useCart } from '../Context/CartContext';
 import { useOrder } from '../Context/OrderContext';
@@ -20,9 +20,9 @@ const CartPage = () => {
     </div>
     <div className='flex h-[100vh]'>
         <div className='w-[55%] py-10'>
-            {cartItems.length ? cartItems.map((item,index) => {
+            {cartItems.length ? cartItems.filter((item,index,self) =>  index === self.findIndex((t) => t.name === item.name)).map((item,index) => {
                 return(
-                    <div className='flex gap-8 items-center border-2 border-gray-200 mt-6 p-5 w-145 rounded-2xl hover:shadow-md ml-auto'>
+                    <div key={index} className='flex gap-8 items-center border-2 border-gray-200 mt-6 p-5 w-145 rounded-2xl hover:shadow-md ml-auto'>
                         <div>
                             <img src={item.image} className='w-50 rounded-full' alt="" />
                         </div>
@@ -35,7 +35,6 @@ const CartPage = () => {
                         </div>
                         <div className='flex gap-4 items-center justify-between'>
                             <button
-                            onClick={() => handleAddToOrder(item)}
                             className='view-button text-purple-600 p-1.5 rounded-full hover:bg-gray-200'>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 24 24">  
                                     <rect x="4" y="11" width="16" height="2" fill="black" />  
@@ -43,7 +42,6 @@ const CartPage = () => {
                             </button>
                             <p>1</p>
                             <button
-                            onClick={() => handleAddToOrder(item)}
                             className='view-button text-purple-600 p-1.5 rounded-full hover:bg-gray-200'>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"></path>
@@ -61,7 +59,39 @@ const CartPage = () => {
                 )
             }
         </div>
-        <div className='w-[45%]'></div>
+        <div className='w-[45%] py-10'>
+            {
+                cartItems.length ? (
+                    <div className='w-[50%] h-[55vh] mt-6 mx-20 rounded-xl p-8 shadow-lg'>
+                <h1 className='text-2xl font-bold'>1 Items</h1>
+                <div>
+                    <div className='flex justify-between mt-8'>
+                        <p className='text-sm'>Subtotal</p>
+                        <p className='text-sm'>${cartItems.reduce((acc, item) => acc + item.price, 0)}</p>
+                    </div>
+                    <div className='flex justify-between mt-1'>
+                        <p className='text-sm'>GST</p>
+                        <p className='text-sm'>$0.00</p>
+                    </div>
+                    <div className='flex justify-between mt-1'>
+                        <p className='text-sm'>Shipping</p>
+                        <p className='text-sm'>$0.00</p>
+                    </div>
+                    <hr className='border-1 border-black mt-2'></hr>
+                    <div className='flex justify-between mt-2'>
+                        <p className='text-sm'>Total</p>
+                        <p className='text-sm font-bold'>${cartItems.reduce((acc, item) => acc + item.price, 0)}</p>
+                    </div>
+                    <div 
+                    onClick={() => handleAddToOrder(item)}
+                    className='flex justify-center mt-8'>
+                        <button className='w-full bg-orange-400 text-white rounded-full px-4 py-2 hover:bg-orange-500 hover:cursor-pointer'>Checkout</button>
+                    </div>
+                </div>
+            </div>
+                ) : null
+            }
+        </div>
     </div>
     </>
   )
