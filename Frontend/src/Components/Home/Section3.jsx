@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import scale from "../../assets/Icons/scale.png";
-import { Menu } from "../../DB/MenuDB";
+import { slider } from "../../DB/MenuDB";
 
 const Section3 = () => {
-  const [activeSection, setActiveSection] = useState(Menu[0].section_name);
+  const [activeSection, setActiveSection] = useState(slider[0].section_name);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const menuRefs = useRef([]); // For category items in .text-scroll
-  const menuItemRefs = useRef([]); // For menu items in .menu-container
+  const menuRefs = useRef([]);
+  const menuItemRefs = useRef([]);
   const textScrollRef = useRef(null);
+  const hasInteracted = useRef(false);
 
-  // Update active section when scrolling the .text-scroll div
+  // Force page to top on mount (optional, removed unless explicitly needed)
+  useEffect(() => {
+    console.log("Section3 mounted, scroll position:", window.scrollY);
+  }, []);
+
+  // Handle scroll for category slider
   useEffect(() => {
     const debounce = (func, wait) => {
       let timeout;
@@ -37,14 +43,15 @@ const Section3 = () => {
 
           if (distance < closestDistance) {
             closestDistance = distance;
-            closestSection = Menu[index].section_name;
+            closestSection = slider[index].section_name;
           }
         }
       });
 
       if (closestSection && closestSection !== activeSection) {
         setActiveSection(closestSection);
-        setCurrentIndex(0); // Reset menu item index when category changes
+        setCurrentIndex(0);
+        hasInteracted.current = true;
       }
     }, 100);
 
@@ -60,61 +67,88 @@ const Section3 = () => {
     };
   }, [activeSection]);
 
-  // Scroll to the active section in .text-scroll when it changes (for click events)
+  // Scroll to active category
   useEffect(() => {
-    const activeIndex = Menu.findIndex((item) => item.section_name === activeSection);
+    if (!hasInteracted.current) return;
+
+    const activeIndex = slider.findIndex((item) => item.section_name === activeSection);
     if (menuRefs.current[activeIndex]) {
       menuRefs.current[activeIndex].scrollIntoView({
+        behavior: "smooth",
         block: "nearest",
         inline: "center",
       });
     }
   }, [activeSection]);
 
-  // Center the menu item in .menu-container when activeSection or currentIndex changes
+  // Center active menu item
   useEffect(() => {
+    if (!hasInteracted.current) return;
+
     if (menuItemRefs.current[currentIndex]) {
       menuItemRefs.current[currentIndex].scrollIntoView({
         behavior: "smooth",
-        inline: "center",
+        block: "nearest", // Prevent vertical scroll
+        inline: "center", // Only horizontal scroll
       });
     }
-  }, [activeSection, currentIndex]);
+  }, [currentIndex]);
 
   const scrollToNext = () => {
-    const items = document.querySelectorAll(".menu-item");
-    if (currentIndex < items.length - 1) {
+    const activeSectionData = slider.find((section) => section.section_name === activeSection);
+    if (currentIndex < activeSectionData.items.length - 1) {
       const nextIndex = currentIndex + 1;
-      items[nextIndex].scrollIntoView({ behavior: "smooth", inline: "center" });
       setCurrentIndex(nextIndex);
+      hasInteracted.current = true;
     }
   };
 
   const scrollToPrev = () => {
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
-      const items = document.querySelectorAll(".menu-item");
-      items[prevIndex].scrollIntoView({ behavior: "smooth", inline: "center" });
       setCurrentIndex(prevIndex);
+      hasInteracted.current = true;
     }
   };
 
+  const handleCategoryClick = (sectionName) => {
+    setActiveSection(sectionName);
+    setCurrentIndex(0);
+    hasInteracted.current = true;
+  };
+
+  const handleItemClick = (index) => {
+    setCurrentIndex(index);
+    hasInteracted.current = true;
+  };
+
+  const activeSectionData = slider.find((section) => section.section_name === activeSection);
+  const backgroundImage = activeSectionData?.image || "";
+
   return (
-    <div className="h-screen bg-amber-100">
+    <div
+      className="h-screen bg-amber-100 relative overflow-hidden"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-black/50" />
+
       {/* Category Slider */}
       <div
         ref={textScrollRef}
-        className="text-scroll flex space-x-40 items-end flex-nowrap h-[35%] overflow-x-auto px-178"
+        className="text-scroll flex space-x-40 items-end flex-nowrap h-[35%] overflow-x-auto overflow-y-hidden px-178 relative z-10"
       >
-        {Menu.map((section, index) => (
+        {slider.map((section, index) => (
           <h1
             ref={(el) => (menuRefs.current[index] = el)}
             key={index}
-            onClick={() => {
-              setActiveSection(section.section_name);
-              setCurrentIndex(0);
-            }}
-            className={`sectionName shrink-0 ${
+            onClick={() => handleCategoryClick(section.section_name)}
+            className={`sectionName shrink-0 text-white cursor-pointer ${
               activeSection === section.section_name ? "text-6xl active" : "text-3xl"
             }`}
           >
@@ -124,7 +158,7 @@ const Section3 = () => {
       </div>
 
       {/* Scale Pattern */}
-      <div className="scale-pattern">
+      <div className="scale-pattern relative z-10">
         <img
           className="w-full object-cover scale-x-[1.06] -scale-y-50"
           src={scale}
@@ -133,48 +167,40 @@ const Section3 = () => {
       </div>
 
       {/* Menu Item Slider */}
-      <div className="w-full h-[60%] flex justify-center items-baseline p-8">
-        <div className="w-[1300px] flex items-center relative">
-          <div className="menu-container flex items-center gap-24 overflow-hidden px-108">
-            {Menu.filter((section) => section.section_name === activeSection).map((section) =>
-              section.items.map((item, index) => (
-                <div
-                  key={index}
-                  ref={(el) => (menuItemRefs.current[index] = el)} // Add ref to menu items
-                  className={`menu-item flex-shrink-0 rounded-3xl shadow-lg p-4 flex flex-col items-center justify-center ${
-                    currentIndex === index ? "active" : ""
-                  }`}
-                  onClick={() => {
-                    setCurrentIndex(index);
-                    index < currentIndex ? scrollToPrev() : scrollToNext();
-                  }}
-                >
+      <div className="w-full h-[60%] flex justify-center items-baseline relative z-10">
+        <div className="w-[1300px] flex items-center relative overflow-hidden">
+          <div className="menu-container flex items-center gap-28 pt-4 overflow-x-auto px-118">
+            {activeSectionData.items.map((item, index) => (
+              <div
+                key={index}
+                ref={(el) => (menuItemRefs.current[index] = el)}
+                className={`menu-item flex-shrink-0 rounded-lg flex flex-col ${
+                  currentIndex === index ? "active" : ""
+                }`}
+                onClick={() => handleItemClick(index)}
+              >
+                <div className="w-full h-[31vh]">
                   <img
-                    className="w-[100px] h-[100px] object-cover rounded-lg m-auto"
+                    className="object-contain rounded-lg"
                     src={item.image}
                     alt={item.name}
                   />
-                  <h1
-                    className={`m-2 text-lg ${
-                      currentIndex === index ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    {item.name}
-                  </h1>
-                  <p
-                    className={`w-[300px] px-2 ${
-                      currentIndex === index ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    {item.description}
-                  </p>
                 </div>
-              ))
-            )}
+                <div className="text-white min-h-[60px]">
+                  {currentIndex === index ? (
+                    <>
+                      <h1>{item.name}</h1>
+                      <p>{item.description}</p>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+            ))}
           </div>
           <button
             onClick={scrollToPrev}
-            className="absolute -left-5 top-1/2 -translate-y-1/2 z-20 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white"
+            className="absolute -left-5 top-1/2 -translate-y-1/2 z-20 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white disabled:opacity-50"
+            disabled={currentIndex === 0}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +219,8 @@ const Section3 = () => {
           </button>
           <button
             onClick={scrollToNext}
-            className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white"
+            className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white disabled:opacity-50"
+            disabled={currentIndex === activeSectionData.items.length - 1}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

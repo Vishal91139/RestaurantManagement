@@ -4,17 +4,22 @@ import Footer from './Components/Footer/Footer'
 import { Outlet } from 'react-router-dom'
 import { CartProvider } from './Context/CartContext'
 import { OrderProvider } from './Context/OrderContext'
+import { useEffect } from 'react'
+import axios from 'axios'
+import { AuthProvider } from './Context/AuthContext'
 
 function App() {
   
   return (
-    <CartProvider>
-      <OrderProvider>
-        <NavBar />
-        <Outlet />
-        <Footer />
-      </OrderProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <OrderProvider>
+          <NavBar />
+          <Outlet />
+          <Footer />
+        </OrderProvider>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 

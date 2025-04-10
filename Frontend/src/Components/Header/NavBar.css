@@ -1,0 +1,35 @@
+.navBar {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navName {
+    border: 1px solid transparent;
+    padding: 8px;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    text-decoration: none;
+    font-family: 'Work sans', sans-serif;
+}
+
+.navName:hover {
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    color: #ffffff;
+}
+
+.navName.active {
+    border: 1px solid #ffffff;
+}
+.navName:hover.active {
+    color:black;
+    background-color: #ffffff;
+}

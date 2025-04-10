@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 const Section2 = () => {
   return (
     <>
-    <div className=' flex px-15 pt-8 '>
+    <div className='flex px-15 pt-8 '>
           <div className='leftpart w-[60%] relative pl-12 py-20'>
             <h1 className='text-3 flex relative'>EXPERIENCE OF REAL RECIPES TASTE
               <img className='w-22 h-22 absolute object-contain bottom-2 left-80' src={Food2} />
