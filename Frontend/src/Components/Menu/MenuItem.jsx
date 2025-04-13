@@ -24,11 +24,13 @@ const MenuItem = ({items}) => {
     }
   };
 
+  const imagePath = `/images/${items.image}`;
+
   return (
     <>
     <form className='menuItem'>
       <div className='flex justify-center'>
-        <img className='w-38' src={items.image} alt={items.name} />
+        <img className='w-38' src={imagePath} alt={items.name} />
       </div>
       <h3 className='font-semibold mt-2 text-lg'>{items.name}</h3>
       <div className="rating">
@@ -88,7 +90,7 @@ const MenuItem = ({items}) => {
         </button>
         <div className='flex bg-amber-400'>
           <span
-              onClick={() => updateQuantity(item.name, -1)}
+              onClick={() => updateQuantity(items.name, -1)}
               className='view-button text-purple-600 p-1.5 rounded-full hover:bg-gray-200'>
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">  
                   <rect x="4" y="11" width="16" height="2" fill="black" />  
@@ -96,7 +98,7 @@ const MenuItem = ({items}) => {
           </span>
           <p className='text-black'>{items.quantity}</p>
           <span
-              onClick={() => updateQuantity(item.name, 1)}
+              onClick={() => updateQuantity(items.name, 1)}
               className='view-button text-purple-600 p-1.5 rounded-full hover:bg-gray-200'
           >
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">

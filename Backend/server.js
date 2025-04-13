@@ -32,6 +32,16 @@ app.get('/',(req,res) => {
     });
 })
 
+app.get('/menu',(req,res) => {
+    const sql = "select * from menu";
+    db.query(sql, (err,result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(result);
+    })
+})
+
 app.post('/signup',(req,res) => {
     const sql = "Insert into users (username,email,password) values (?,?,?)";
     const values = [req.body.username, req.body.email, req.body.password];
