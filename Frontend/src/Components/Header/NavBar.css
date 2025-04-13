@@ -33,3 +33,27 @@
     color:black;
     background-color: #ffffff;
 }
+
+.user-menu {
+    position: relative;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    z-index: 10;
+}
+
+.user-menu:hover .dropdown {
+    display: block;
+  }
+
+.logout-btn {
+    font-family: 'Work sans', sans-serif;
+    font-size: 16px;
+    display: none;
+}
+
+.user-menu:hover .logout-btn {
+    display: block;
+  }

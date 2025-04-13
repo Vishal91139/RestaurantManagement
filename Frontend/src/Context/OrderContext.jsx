@@ -1,58 +1,187 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 const OrderContext = createContext();
 
 export function OrderProvider({ children }) {
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const { isAuthenticated, token } = useAuth();
 
-    const addOrder = useCallback((cartItems) => {
+    const BACKEND_URL = 'http://localhost:5001';
+
+    // Fetch orders from the database when the component mounts or auth state changes
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadOrders = async () => {
+            if (isAuthenticated && token) {
+                setLoading(true);
+                try {
+                    await fetchOrders();
+                } finally {
+                    if (isMounted) {
+                        setLoading(false);
+                    }
+                }
+            } else {
+                setOrders([]);
+            }
+        };
+
+        loadOrders();
+
+        // Cleanup function to prevent state updates if component unmounts
+        return () => {
+            isMounted = false;
+        };
+    }, [isAuthenticated, token]);
+
+    // Function to fetch orders from the backend
+    const fetchOrders = async () => {
+        if (!isAuthenticated || !token) return;
+
+        setError(null);
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/orders/myorders`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
+
+            const data = await response.json();
+            setOrders(data);
+            return data;
+        } catch (err) {
+            console.error('Error fetching orders:', err);
+            setError(err.message);
+            throw err;
+        }
+    };
+
+    const addOrder = useCallback(async (cartItems) => {
         // Validate input
         if (!Array.isArray(cartItems) || cartItems.length === 0) {
             console.warn('No valid items provided for order');
             return null;
         }
 
-        // Calculate totals
-        const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = subtotal * 0.1; // Example 10% tax, adjust as needed
-        const total = subtotal + tax;
+        if (!isAuthenticated || !token) {
+            console.error('User must be authenticated to create an order');
+            return null;
+        }
 
-        const newOrder = {
-            items: cartItems.map(item => ({
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                image: item.image,
-                subtotal: item.price * item.quantity
-            })),
-            orderDate: new Date().toISOString(),
-            orderId: Math.floor(10000 + Math.random() * 90000),
-            status: 'pending',
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            total: total.toFixed(2)
-        };
+        setLoading(true);
+        setError(null);
 
-        setOrders(prev => [...prev, newOrder]);
-        return newOrder.orderId;
-    }, []);
+        try {
+            // Format cart items for the API
+            const items = cartItems.map(item => ({
+                menu_id: item.menu_id || item.id,
+                quantity: item.quantity
+            }));
 
-    const updateOrderStatus = useCallback((orderId, newStatus) => {
-        setOrders(prev => prev.map(order => 
-            order.orderId === orderId ? { ...order, status: newStatus } : order
-        ));
-    }, []);
+            // Send order to backend
+            const response = await fetch(`${BACKEND_URL}/api/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ items })
+            });
 
-    const getOrderById = useCallback((orderId) => {
-        return orders.find(order => order.orderId === orderId);
-    }, [orders]);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to create order');
+            }
+
+            // Refresh orders from the database instead of creating a local object
+            await fetchOrders();
+            return data.orderId;
+        } catch (err) {
+            console.error('Error creating order:', err);
+            setError(err.message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, [isAuthenticated, token]);
+
+    const updateOrderStatus = useCallback(async (orderId, newStatus) => {
+        if (!isAuthenticated || !token) return;
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update order status');
+            }
+
+            // Refresh orders from the database
+            await fetchOrders();
+        } catch (err) {
+            console.error('Error updating order status:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [isAuthenticated, token]);
+
+    const getOrderById = useCallback(async (orderId) => {
+        if (!isAuthenticated || !token) return null;
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/orders/${orderId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch order details');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Error fetching order details:', err);
+            setError(err.message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, [isAuthenticated, token]);
 
     return (
-        <OrderContext.Provider value={{ 
-            orders, 
-            addOrder, 
-            updateOrderStatus, 
-            getOrderById 
+        <OrderContext.Provider value={{
+            orders,
+            loading,
+            error,
+            addOrder,
+            updateOrderStatus,
+            getOrderById,
+            fetchOrders
         }}>
             {children}
         </OrderContext.Provider>
