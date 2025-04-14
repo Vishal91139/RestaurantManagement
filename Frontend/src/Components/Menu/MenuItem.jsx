@@ -1,27 +1,49 @@
 // src/Components/Menu/MenuItem.jsx
-import React, { useState } from "react";
-import { useAuth } from "../../Context/AuthContext"; // Import useAuth hook
-import { useCart } from "../../Context/CartContext"; // Import useCart hook
-
-// Optional: Import CSS if needed
-// import "./Menu.css";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../Context/AuthContext";
+import { useCart } from "../../Context/CartContext";
+import "./Menu.css";
 
 // Assuming backend URL is needed if not using proxy
-const BACKEND_URL = 'http://localhost:5001'; // Use this if you are NOT using a proxy
+const BACKEND_URL = 'http://localhost:5001';
 
 const MenuItem = ({ items }) => {
+    // Local state for active status - completely independent
+    const [isActive, setIsActive] = useState(false);
     const [rating, setRating] = useState(items?.rating || 4);
-    // --- Get user object (which contains id) and token from context ---
-    const { isAuthenticated, token, user } = useAuth(); // Add 'user' here
-    // --- Get cart context for local state management ---
-    const { addToCart: addToLocalCart } = useCart();
-    // --- End change ---
+    const { isAuthenticated, token, user } = useAuth();
+    const { addToCart: addToLocalCart, cart } = useCart();
 
+    const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
+    const [isInCart, setIsInCart] = useState(false);
+    const [cartQuantity, setCartQuantity] = useState(0);
 
-    const handleAddToCart = async () => {
+    // Check if item is already in cart
+    useEffect(() => {
+        if (cart && cart.length > 0 && items) {
+            const cartItem = cart.find(item => item.id === items.id);
+            if (cartItem) {
+                setIsInCart(true);
+                setCartQuantity(cartItem.quantity || 1);
+            } else {
+                setIsInCart(false);
+                setCartQuantity(0);
+            }
+        }
+    }, [cart, items]);
+
+    // No longer syncing with parent's isActive prop - each card is independent
+
+    const handleAddToCart = async (e) => {
+        // Prevent event propagation
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
         // Prevent multiple clicks while processing
         if (isAdding) return;
 
@@ -42,19 +64,18 @@ const MenuItem = ({ items }) => {
             return;
         }
 
-        // --- Explicitly gather all data on frontend ---
-        const userIdToSend = user.id; // Get userId from the authenticated user context
-        const menuItemIdToSend = items.id; // Get menuItemId from the item prop
-        const quantityToSend = 1; // Set quantity explicitly to 1
-        // --- End gathering data ---
+        // Gather data for API request
+        const userIdToSend = user.id;
+        const menuItemIdToSend = items.id;
+        const quantityToSend = quantity;
 
-        setIsAdding(true); // Set loading state
+        setIsAdding(true);
 
-        // --- Prepare the data object for the request body ---
+        // Prepare the data object for the request body
         const dataToSend = {
-            userId: userIdToSend,         // Include userId
-            menuItemId: menuItemIdToSend, // Include menuItemId
-            quantity: quantityToSend      // Include quantity
+            userId: userIdToSend,
+            menuItemId: menuItemIdToSend,
+            quantity: quantityToSend
         };
 
         // --- CONSOLE LOG DATA BEFORE SENDING ---
@@ -90,18 +111,20 @@ const MenuItem = ({ items }) => {
             }
 
             // Add to local cart state for immediate UI update
-            addToLocalCart(items);
+            const itemWithQuantity = { ...items, quantity: quantityToSend };
+            addToLocalCart(itemWithQuantity);
+
+            // Update local state
+            setIsInCart(true);
+            setCartQuantity(prev => prev + quantityToSend);
 
             // Show success message
             setSuccessMessage(data.message || `Added ${items.name} to cart!`);
 
-            // Use a single timeout for the success message
-            const timer = setTimeout(() => {
+            // Clear success message after delay
+            setTimeout(() => {
                 setSuccessMessage('');
             }, 3000);
-
-            // Clean up the timeout if component unmounts
-            return () => clearTimeout(timer);
 
         } catch (err) {
             console.error("Frontend: Add to Cart API Error:", err);
@@ -114,7 +137,36 @@ const MenuItem = ({ items }) => {
         }
     };
 
-    // Helper function to render stars (keep as before)
+    // Toggle active state locally
+    const toggleActive = (e) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        // Only toggle if not clicking on a button or control
+        if (!e.target.closest('button') &&
+            !e.target.closest('.menu-item-quantity-controls') &&
+            !e.target.closest('.menu-item-cart')) {
+            setIsActive(prev => !prev);
+        }
+    };
+
+    // Quantity adjustment functions
+    const increaseQuantity = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setQuantity(prev => prev + 1);
+    };
+
+    const decreaseQuantity = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (quantity > 1) {
+            setQuantity(prev => prev - 1);
+        }
+    };
+
+    // Helper function to render stars
     const renderStars = () => {
         const stars = [];
         const baseId = items?.id || `fallback-${Math.random().toString(36).substring(7)}`;
@@ -131,35 +183,105 @@ const MenuItem = ({ items }) => {
         return <div className="flex flex-row-reverse justify-center">{stars}</div>;
     };
 
-    // Image URL (keep as before)
+    // Image URL
     const imageUrl = items?.image || '/images/placeholder-food.png';
-    console.log("Frontend: Image URL:", imageUrl);
 
-    // Render JSX (keep as before)
     return (
-        <div className="border rounded-lg shadow p-4 pt-6 flex flex-col items-center text-center transition duration-300 hover:shadow-lg relative overflow-hidden h-full min-h-[380px]">
-            <p className="absolute top-2 right-2 bg-red-600 text-white font-bold px-2 py-1 rounded text-sm shadow z-10">
-                ${items?.price ? parseFloat(items.price).toFixed(2) : '?.??'}
-            </p>
-            <div className="w-36 h-36 mb-3 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-full border bg-gray-100">
-                <img className="w-full h-full object-cover" src={imageUrl} alt={items?.name || 'Menu item'}
-                    onError={(e) => { e.target.onerror = null; e.target.src = '/images/placeholder-food.png'; }}
-                />
+        <div
+            className={`menu-item ${isActive ? 'active' : ''}`}
+            onClick={toggleActive}
+        >
+            {/* Price tag */}
+            <div className="menu-item-price">
+                <span>${items?.price ? parseFloat(items.price).toFixed(2) : '?.??'}</span>
             </div>
-            <h3 className="font-semibold mt-2 text-lg mb-1 flex-shrink-0">{items?.name || 'Unnamed Item'}</h3>
-            <div className="mb-2 flex-shrink-0">{renderStars()}</div>
-            <p className="text-sm text-gray-600 mb-3 flex-grow overflow-y-auto max-h-16">{items?.description || 'No description.'}</p>
-            <div className="h-5 mb-1 flex-shrink-0 text-xs">
-                {error && <p className="text-red-600">{error}</p>}
-                {successMessage && <p className="text-green-600">{successMessage}</p>}
+
+            {/* Image container with animation */}
+            <div className="menu-item-image-container">
+                <div className="menu-item-image-wrapper">
+                    <img
+                        className="menu-item-image"
+                        src={imageUrl}
+                        alt={items?.name || 'Menu item'}
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/images/placeholder-food.png'; }}
+                    />
+                </div>
             </div>
-            <button
-                onClick={handleAddToCart}
-                className={`w-full mt-auto px-4 py-2 rounded text-white font-semibold text-sm transition duration-200 flex-shrink-0 ${isAdding ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                disabled={isAdding || items?.id == null}
-            >
-                {isAdding ? "Adding..." : "Add to cart"}
-            </button>
+
+            {/* Content section */}
+            <div className="menu-item-content">
+                <h3 className="menu-item-title">{items?.name || 'Unnamed Item'}</h3>
+                <div className="menu-item-rating">{renderStars()}</div>
+
+                {/* Description - shows more when active */}
+                <div className="menu-item-description-container">
+                    <p className="menu-item-description">{items?.description || 'No description.'}</p>
+                </div>
+
+                {/* Status messages */}
+                <div className="menu-item-status">
+                    {error && <p className="menu-item-error">{error}</p>}
+                    {successMessage && <p className="menu-item-success">{successMessage}</p>}
+                </div>
+
+                {/* Cart section with quantity controls */}
+                <div className="menu-item-cart">
+                    {isInCart ? (
+                        <div className="menu-item-cart-row">
+                            <div className="menu-item-cart-controls">
+                                <button
+                                    className="menu-item-quantity-btn decrease"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.nativeEvent.stopImmediatePropagation();
+                                        decreaseQuantity(e);
+                                    }}
+                                    disabled={quantity <= 1}
+                                >
+                                    <span>-</span>
+                                </button>
+
+                                <span className="menu-item-quantity">{quantity}</span>
+
+                                <button
+                                    className="menu-item-quantity-btn increase"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.nativeEvent.stopImmediatePropagation();
+                                        increaseQuantity(e);
+                                    }}
+                                >
+                                    <span>+</span>
+                                </button>
+                            </div>
+
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.nativeEvent.stopImmediatePropagation();
+                                    handleAddToCart(e);
+                                }}
+                                className={`menu-item-update-btn ${isAdding ? 'disabled' : ''}`}
+                                disabled={isAdding || items?.id == null}
+                            >
+                                {isAdding ? 'Adding...' : 'Update'}
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.nativeEvent.stopImmediatePropagation();
+                                handleAddToCart(e);
+                            }}
+                            className={`menu-item-add-btn ${isAdding ? 'disabled' : ''}`}
+                            disabled={isAdding || items?.id == null}
+                        >
+                            {isAdding ? 'Adding...' : 'Add to Cart'}
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

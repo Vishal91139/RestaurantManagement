@@ -16,6 +16,8 @@ import Image12 from '../assets/Menu/Dinner/dinner2.png';
 import Image13 from '../assets/Menu/Dinner/dinner3.png';
 import Image14 from '../assets/Menu/Dinner/dinner4.png';
 import Image15 from '../assets/Menu/Dinner/dinner5.png';
+import Images16 from '../assets/desserts.jpg';
+import Image17 from '../assets/chicken.jpg';
 
 export const Menu = [ // Using the 'Menu' export you provided
     {
@@ -257,7 +259,7 @@ export const slider = [
     },
     {
       "section_name": "CHICKEN",
-      "image": "https://img.freepik.com/free-photo/fried-chicken-wings-with-fish-sauce-sweet-fish-sauce_1150-26386.jpg?t=st=1744298913~exp=1744302513~hmac=5a97e894157f2fbcf8f4aaf20c8749cf70933dc57a5da11ca8e2ce53ffd1f684&w=1380",
+      "image": Image17,
       "items": [
         {
           "name": "Chicken Lollipop",
@@ -365,7 +367,7 @@ export const slider = [
     },
     {
       "section_name": "DESSERTS",
-      "image": "https://img.freepik.com/free-photo/top-close-view-sugar-powdered-candies-delicious-nougat-with-cake-confiture-berries-dark-surface_140725-43857.jpg?t=st=1744139698~exp=1744143298~hmac=753ceb35e46860c5c23bf1c1853a383ad30489c4805ad394c22330e7e685d44a&w=1380",
+      "image": Images16,
       "items": [
         {
           "name": "Chocolate Lava Cake",

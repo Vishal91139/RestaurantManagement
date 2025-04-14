@@ -17,7 +17,7 @@ function App() {
           <main className="main-content"> {/* Optional: semantic main tag */}
             <Outlet />
           </main>
-          <Footer />
+          <Footer />  
         </OrderProvider>
       </CartProvider>
     </AuthProvider>
