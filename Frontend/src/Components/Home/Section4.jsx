@@ -74,8 +74,26 @@ const Section4 = () => {
     <section className="newest-items" ref={sectionRef}>
       {/* Background elements */}
       <div className="bg-pattern"></div>
+      <div className="pattern-overlay-1"></div>
+      <div className="pattern-overlay-2"></div>
       <div className="bg-accent accent-1"></div>
       <div className="bg-accent accent-2"></div>
+      <div className="bg-accent accent-3"></div>
+      <div className="bg-accent accent-4"></div>
+
+      {/* Floating elements */}
+      <div className="floating-element floating-spoon"></div>
+      <div className="floating-element floating-fork"></div>
+      <div className="floating-element floating-plate"></div>
+      <div className="floating-element floating-chef"></div>
+      <div className="floating-element floating-pepper"></div>
+
+      {/* Food particles */}
+      <div className="food-particle particle-1"></div>
+      <div className="food-particle particle-2"></div>
+      <div className="food-particle particle-3"></div>
+      <div className="food-particle particle-4"></div>
+      <div className="food-particle particle-5"></div>
 
       <div className="newest-items-container">
         <div className="newest-items-header">

@@ -1,13 +1,17 @@
-// src/App.js (RECAP - Make sure it looks like this)
+// src/App.js
 import './App.css';
-import NavBar from './Components/Header/NavBar'; // Adjust path if needed
-import Footer from './Components/Footer/Footer'; // Adjust path if needed
-import { Outlet } from 'react-router-dom';
-import { CartProvider } from './Context/CartContext'; // Adjust path if needed
-import { OrderProvider } from './Context/OrderContext'; // Adjust path if needed
-import { AuthProvider } from './Context/AuthContext'; // Import AuthProvider
+import NavBar from './Components/Header/NavBar';
+import Footer from './Components/Footer/Footer';
+import { Outlet, useLocation } from 'react-router-dom';
+import { CartProvider } from './Context/CartContext';
+import { OrderProvider } from './Context/OrderContext';
+import { AuthProvider } from './Context/AuthContext';
 
 function App() {
+  // Get the current location to conditionally render the footer
+  const location = useLocation();
+  const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
+
   return (
     // AuthProvider wraps everything that needs the auth context
     <AuthProvider>
@@ -17,7 +21,7 @@ function App() {
           <main className="main-content"> {/* Optional: semantic main tag */}
             <Outlet />
           </main>
-          <Footer />  
+          {!hideFooter && <Footer />}
         </OrderProvider>
       </CartProvider>
     </AuthProvider>

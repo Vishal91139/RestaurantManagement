@@ -1,0 +1,44 @@
+/* MenuItemFix.css - Fixes for MenuItem animations */
+
+/* Fix for animation delay on hover */
+.menu-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  will-change: transform, box-shadow;
+}
+
+/* Prevent content from spreading when active */
+.menu-item.active .menu-item-description-container {
+  max-height: 60px !important; /* Keep the same height as non-active state */
+}
+
+/* Fix for image animation */
+.menu-item-image-wrapper {
+  transition: transform 0.2s ease, border-color 0.2s ease !important;
+}
+
+.menu-item-image {
+  transition: transform 0.2s ease !important;
+}
+
+/* Fix for active state scaling */
+.menu-item.active {
+  transform: none !important; /* Prevent scaling on active state */
+}
+
+.menu-item.active .menu-item-image-wrapper {
+  width: 150px !important; /* Keep the same size as non-active state */
+  height: 150px !important;
+  transform: none !important;
+}
+
+/* Fix for star rating animation */
+.menu-item:hover .menu-item-rating label {
+  transition: transform 0.2s ease !important;
+}
+
+/* Fix for add to cart button animation */
+.menu-item-add-btn,
+.menu-item-update-btn,
+.menu-item-quantity-btn {
+  transition: all 0.2s ease !important;
+}

@@ -1,10 +1,12 @@
-// src/Pages/LoginPage.jsx  (Place it in your Pages directory)
-import React, { useState } from 'react';
+// src/Pages/LoginPage.jsx
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation, Link } from 'react-router-dom'; // Import Link
-import { useAuth } from '../Context/AuthContext'; // Adjust path if needed
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
+import { gsap } from 'gsap';
+import './LoginPage.css';
 
-const API_URL = 'http://localhost:5001/api/auth'; // Your backend Login endpoint
+const API_URL = 'http://localhost:5001/api/auth';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -14,8 +16,36 @@ function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Create refs for GSAP animations
+    const containerRef = useRef(null);
+    const cardRef = useRef(null);
+    const formRef = useRef(null);
+
     // Redirect to home '/' after login, or where the user came from
     const from = location.state?.from?.pathname || '/';
+
+    // Initialize GSAP animations when component mounts
+    useEffect(() => {
+        if (containerRef.current && cardRef.current && formRef.current) {
+            // Animate container
+            gsap.fromTo(containerRef.current,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.5 }
+            );
+
+            // Animate card
+            gsap.fromTo(cardRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.6, delay: 0.2 }
+            );
+
+            // Animate form elements
+            gsap.fromTo(formRef.current.children,
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.4 }
+            );
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,49 +61,59 @@ function LoginPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[calc(100vh-128px)] bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Sign in to your account
-                    </h2>
+        <div className="login-page-container" ref={containerRef}>
+            <div className="login-card" ref={cardRef}>
+                <div className="login-header">
+                    <h1 className="login-title fade-in">Welcome Back</h1>
+                    <p className="login-subtitle slide-up">Sign in to continue your flavor journey</p>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <input type="hidden" name="remember" defaultValue="true" />
+
+                <form className="login-form" onSubmit={handleSubmit} ref={formRef}>
                     {error && (
-                        <div className="rounded-md bg-red-50 p-4 mb-4">
-                            <p className="text-sm font-medium text-red-800">{error}</p>
+                        <div className="error-message">
+                            <p>{error}</p>
                         </div>
                     )}
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="email-address" className="sr-only">Email address</label>
-                            <input
-                                id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Email address" />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">Password</label>
-                            <input
-                                id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Password" />
-                        </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email-address" className="form-label">Email Address</label>
+                        <input
+                            id="email-address"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your email"
+                        />
                     </div>
-                    <div>
-                        <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                            Sign in
-                        </button>
+
+                    <div className="form-group">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your password"
+                        />
                     </div>
-                    <div className="text-sm text-center">
-                        <p className="text-gray-600">
-                            Don't have an account?{' '}
-                            {/* --- Link to Signup Page --- */}
-                            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
-                                Sign Up
-                            </Link>
-                        </p>
+
+                    <button type="submit" className="login-button">
+                        Sign In
+                    </button>
+
+                    <div className="auth-switch">
+                        <span>Don't have an account?</span>
+                        <Link to="/signup" className="auth-switch-link">
+                            Sign Up
+                        </Link>
                     </div>
                 </form>
             </div>

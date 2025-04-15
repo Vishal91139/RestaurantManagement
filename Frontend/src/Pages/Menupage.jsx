@@ -4,6 +4,7 @@ import './Menupage.css'
 import { Menu as MenuDataFromDB } from '../DB/menuDB';
 import MenuItem from '../Components/Menu/MenuItem';
 import wavy from '../assets/Icons/wavy.png';
+// Note: We're now using the enhanced Menu.css.new and MenuItemFix.css.new files imported in MenuItem component
 
 function Menupage() {
     // State to hold all valid items after processing menuDB.js

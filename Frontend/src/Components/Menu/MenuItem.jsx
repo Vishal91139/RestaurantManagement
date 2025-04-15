@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import { useCart } from "../../Context/CartContext";
 import "./Menu.css";
+import "./MenuItemFix.css"; // Import the fix CSS
 
 // Assuming backend URL is needed if not using proxy
 const BACKEND_URL = 'http://localhost:5001';
@@ -12,7 +13,7 @@ const MenuItem = ({ items }) => {
     const [isActive, setIsActive] = useState(false);
     const [rating, setRating] = useState(items?.rating || 4);
     const { isAuthenticated, token, user } = useAuth();
-    const { addToCart: addToLocalCart, cart } = useCart();
+    const { addToCart: addToLocalCart, cartItems: cart, updateQuantity: updateCartQuantity } = useCart();
 
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
@@ -24,13 +25,21 @@ const MenuItem = ({ items }) => {
     // Check if item is already in cart
     useEffect(() => {
         if (cart && cart.length > 0 && items) {
-            const cartItem = cart.find(item => item.id === items.id);
+            // Check for both id and menu_id to handle different formats
+            const cartItem = cart.find(item =>
+                (item.id === items.id) || (item.menu_id === items.id)
+            );
+
             if (cartItem) {
                 setIsInCart(true);
                 setCartQuantity(cartItem.quantity || 1);
+                // Initialize quantity state with cart quantity
+                setQuantity(cartItem.quantity || 1);
             } else {
                 setIsInCart(false);
                 setCartQuantity(0);
+                // Reset quantity to 1 when item is not in cart
+                setQuantity(1);
             }
         }
     }, [cart, items]);
@@ -129,6 +138,79 @@ const MenuItem = ({ items }) => {
         } catch (err) {
             console.error("Frontend: Add to Cart API Error:", err);
             setError(err.message || "Could not add item.");
+        } finally {
+            // Small delay before allowing another click to prevent double-clicks
+            setTimeout(() => {
+                setIsAdding(false);
+            }, 300);
+        }
+    };
+
+    // Handle updating cart item quantity
+    const handleUpdateCart = async (e) => {
+        // Prevent event propagation
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        // Prevent multiple clicks while processing
+        if (isAdding) return;
+
+        setError(null);
+        setSuccessMessage('');
+
+        // Check 1: User must be logged in AND user object available
+        if (!isAuthenticated || !user || !user.id) {
+            alert("Please log in to update your cart.");
+            console.error("Update Cart Error: User not authenticated or user data missing.");
+            return;
+        }
+
+        // Check 2: Item prop must exist and have an ID
+        if (!items || items.id == null) {
+            console.error("MenuItem Error: Invalid item data received (missing 'id'). Data:", items);
+            setError("Item data error.");
+            return;
+        }
+
+        // Find the item in the cart (check both id and menu_id)
+        const cartItem = cart.find(item =>
+            (item.id === items.id) || (item.menu_id === items.id)
+        );
+
+        if (!cartItem) {
+            console.error("Update Cart Error: Item not found in cart");
+            setError("Item not found in cart.");
+            return;
+        }
+
+        // Get the actual ID to use for the update (could be either id or menu_id)
+        const itemIdToUpdate = cartItem.id || cartItem.menu_id;
+
+        setIsAdding(true);
+
+        try {
+            // Calculate the change in quantity
+            const quantityChange = quantity - cartItem.quantity;
+
+            // Update the cart item quantity using the correct ID
+            await updateCartQuantity(itemIdToUpdate, quantityChange);
+
+            // Update local state
+            setCartQuantity(quantity);
+
+            // Show success message
+            setSuccessMessage(`Updated ${items.name} quantity to ${quantity}!`);
+
+            // Clear success message after delay
+            setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
+
+        } catch (err) {
+            console.error("Frontend: Update Cart API Error:", err);
+            setError(err.message || "Could not update item.");
         } finally {
             // Small delay before allowing another click to prevent double-clicks
             setTimeout(() => {
@@ -259,12 +341,12 @@ const MenuItem = ({ items }) => {
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.nativeEvent.stopImmediatePropagation();
-                                    handleAddToCart(e);
+                                    handleUpdateCart(e);
                                 }}
                                 className={`menu-item-update-btn ${isAdding ? 'disabled' : ''}`}
                                 disabled={isAdding || items?.id == null}
                             >
-                                {isAdding ? 'Adding...' : 'Update'}
+                                {isAdding ? 'Updating...' : 'Update'}
                             </button>
                         </div>
                     ) : (

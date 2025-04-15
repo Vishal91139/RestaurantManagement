@@ -1,9 +1,11 @@
-// src/Pages/SignupPage.jsx (Place it in your Pages directory)
-import React, { useState } from 'react';
+// src/Pages/SignupPage.jsx
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom';
+import { gsap } from 'gsap';
+import './SignupPage.css';
 
-const API_URL = 'http://localhost:5001/api/auth'; // Your backend Signup endpoint
+const API_URL = 'http://localhost:5001/api/auth';
 
 function SignupPage() {
     const [username, setUsername] = useState('');
@@ -12,6 +14,34 @@ function SignupPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+
+    // Create refs for GSAP animations
+    const containerRef = useRef(null);
+    const cardRef = useRef(null);
+    const formRef = useRef(null);
+
+    // Initialize GSAP animations when component mounts
+    useEffect(() => {
+        if (containerRef.current && cardRef.current && formRef.current) {
+            // Animate container
+            gsap.fromTo(containerRef.current,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.5 }
+            );
+
+            // Animate card
+            gsap.fromTo(cardRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.6, delay: 0.2 }
+            );
+
+            // Animate form elements
+            gsap.fromTo(formRef.current.children,
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.4 }
+            );
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,64 +60,77 @@ function SignupPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[calc(100vh-128px)] bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Create your account
-                    </h2>
+        <div className="signup-page-container" ref={containerRef}>
+            <div className="signup-card" ref={cardRef}>
+                <div className="signup-header">
+                    <h1 className="signup-title fade-in">Create Account</h1>
+                    <p className="signup-subtitle slide-up">Join us and start your flavor journey</p>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+
+                <form className="signup-form" onSubmit={handleSubmit} ref={formRef}>
                     {error && (
-                        <div className="rounded-md bg-red-50 p-4 mb-4">
-                             <p className="text-sm font-medium text-red-800">{error}</p>
+                        <div className="error-message">
+                            <p>{error}</p>
                         </div>
                     )}
-                     {success && (
-                        <div className="rounded-md bg-green-50 p-4 mb-4">
-                             <p className="text-sm font-medium text-green-800">{success}</p>
+                    {success && (
+                        <div className="success-message">
+                            <p>{success}</p>
                         </div>
                     )}
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        {/* Username Input */}
-                        <div>
-                            <label htmlFor="username" className="sr-only">Username</label>
-                            <input
-                                id="username" name="username" type="text" required value={username} onChange={(e) => setUsername(e.target.value)}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Username" />
-                        </div>
-                        {/* Email Input */}
-                         <div>
-                            <label htmlFor="email-address-signup" className="sr-only">Email address</label>
-                            <input
-                                id="email-address-signup" name="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Email address" />
-                        </div>
-                        {/* Password Input */}
-                        <div>
-                            <label htmlFor="password-signup" className="sr-only">Password</label>
-                            <input
-                                id="password-signup" name="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Password" />
-                        </div>
+
+                    <div className="form-group">
+                        <label htmlFor="username" className="form-label">Username</label>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="form-input"
+                            placeholder="Choose a username"
+                        />
                     </div>
 
-                    <div>
-                        <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
-                            Sign Up
-                        </button>
+                    <div className="form-group">
+                        <label htmlFor="email-address-signup" className="form-label">Email Address</label>
+                        <input
+                            id="email-address-signup"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your email"
+                        />
                     </div>
-                     <div className="text-sm text-center">
-                        <p className="text-gray-600">
-                            Already have an account?{' '}
-                             {/* --- Link to Login Page --- */}
-                            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
-                                Sign In
-                            </Link>
-                        </p>
+
+                    <div className="form-group">
+                        <label htmlFor="password-signup" className="form-label">Password</label>
+                        <input
+                            id="password-signup"
+                            name="password"
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Create a password"
+                        />
+                    </div>
+
+                    <button type="submit" className="signup-button">
+                        Sign Up
+                    </button>
+
+                    <div className="auth-switch">
+                        <span>Already have an account?</span>
+                        <Link to="/login" className="auth-switch-link">
+                            Sign In
+                        </Link>
                     </div>
                 </form>
             </div>
