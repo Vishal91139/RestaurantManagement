@@ -271,7 +271,7 @@ const MenuItem = ({ items }) => {
     return (
         <div
             className={`menu-item ${isActive ? 'active' : ''}`}
-            onClick={toggleActive}
+            // onClick={toggleActive}
         >
             {/* Price tag */}
             <div className="menu-item-price">

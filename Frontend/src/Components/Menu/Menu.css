@@ -29,8 +29,7 @@
   width:100%;
   display: flex;
   flex-direction: column;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid rgba(255, 106, 0, 0.1);
 }
 
@@ -42,9 +41,7 @@
 }
 
 .menu-item.active {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-large);
-  background: linear-gradient(to bottom, white, #fff5eb);
+  box-shadow: var(--shadow-medium);
   border-color: rgba(255, 106, 0, 0.2);
   z-index: 5;
 }
@@ -107,10 +104,7 @@
   transform: scale(1.1);
 }
 
-.menu-item.active .menu-item-image-wrapper {
-  width: 180px;
-  height: 180px;
-}
+/* Removed image size change on active state */
 
 /* Content Section */
 .menu-item-content {
@@ -137,7 +131,7 @@
 
 /* Rating Stars */
 .menu-item-rating {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: flex;
 }
 
@@ -159,12 +153,8 @@
   transition: max-height 0.4s ease;
 }
 
-.menu-item.active .menu-item-description-container {
-  max-height: 200px;
-}
-
 .menu-item-description {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: #666;
 }
@@ -172,7 +162,7 @@
 /* Status Messages */
 .menu-item-status {
   min-height: 10px;
-  margin: 10px;
+  margin: 6px 10px;
   text-align: center;
 }
 

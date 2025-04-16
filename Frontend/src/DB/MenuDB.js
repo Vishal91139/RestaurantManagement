@@ -223,11 +223,11 @@ export const sampleMenu = [
 export const slider = [
     {
       "section_name": "BREAKFAST",
-      "image": "https://img.freepik.com/free-photo/top-view-waffles-with-citrus-raisins_23-2148526321.jpg?t=st=1744295657~exp=1744299257~hmac=d7a732e1881f0b72856a18db9c02153ea6addbb195bd766f5b4a8598e204ff72&w=1480",
+      "image": "https://plus.unsplash.com/premium_photo-1700611161089-31f4fda4e69e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "items": [
         {
           "name": "Avocado Toast",
-          "description": "Toasted sourdough bread generously topped with smashed avocado, cherry tomatoes, and a perfectly poached egg, drizzled with olive oil and sprinkled with chili flakes for a deliciously healthy start to your day.",
+          "description": "Toasted sourdough bread generously topped with smashed avocado, cherry tomatoes, and a perfectly poached egg, drizzled with olive oil for a deliciously healthy start to your day.",
           "price": 9.99,
           "image": "https://images.unsplash.com/photo-1515041761709-f9fc96e04cd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
@@ -245,7 +245,7 @@ export const slider = [
         },
         {
           "name": "Grilled Chicken Sandwich",
-          "description": "A light yet satisfying sandwich made with herb-marinated grilled chicken breast, fresh lettuce, juicy tomato slices, and a creamy mayonnaise spread, all packed between slices of toasted whole grain bread.",
+          "description": "A light yet satisfying sandwich made with herb-marinated grilled chicken breast, fresh lettuce, juicy tomato slices, all packed between slices of toasted whole grain bread.",
           "price": 9.49,
           "image": "https://plus.unsplash.com/premium_photo-1671559021919-19d9610c8cad?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
@@ -271,7 +271,7 @@ export const slider = [
           "name": "Butter Chicken",
           "description": "Tender pieces of chicken simmered in a rich, creamy tomato sauce infused with aromatic spices and butter. Served best with naan or rice.",
           "price": 13.49,
-          "image": "https://img.freepik.com/free-photo/pre-prepared-food-showcasing-ready-eat-delicious-meals-go_23-2151246080.jpg?t=st=1744115874~exp=1744119474~hmac=8827903536cab467d1dd287f995a5832a8a340009018b23729b08138ac28a45f&w=740"
+          "image": "https://img.freepik.com/premium-photo/chicken-tikka-masala-cooked-marinated-chicken-spiced-curry-sauce_1105327-3881.jpg?w=1380"
         },
         {
           "name": "Grilled Chicken Tikka",
@@ -289,7 +289,7 @@ export const slider = [
           "name": "Spicy Chicken Wings",
           "description": "Deep-fried chicken wings coated in a fiery and flavorful sauce made from hot peppers and garlic. A perfect snack for spice lovers.",
           "price": 10.49,
-          "image": "https://img.freepik.com/free-photo/close-up-delicious-chicken-meal_23-2150741793.jpg?t=st=1744116222~exp=1744119822~hmac=900fd196b42e6ecf86cad839f04cd8498bd8fb8ed59ba17614a9542504208956&w=1380"
+          "image": "https://img.freepik.com/free-photo/fresh-buffalo-chicken-wings-with-savory-dip-appetizer-generative-ai_188544-8118.jpg?t=st=1744815762~exp=1744819362~hmac=8cb1263e4d76dac7a4032f540714d4b157bbad1a974c0771b822ac577873d79a&w=1380"
         }
       ]
     },
@@ -335,25 +335,25 @@ export const slider = [
       "items": [
         {
           "name": "Spaghetti Carbonara",
-          "description": "A classic Italian pasta dish made with perfectly cooked spaghetti tossed in a rich and creamy sauce made from eggs, parmesan cheese, crispy bacon, and freshly ground black pepper. Served hot and garnished with parsley.",
+          "description": "A classic Italian pasta dish made with perfectly cooked spaghetti tossed in a rich and creamy sauce made from eggs, parmesan cheese, crispy bacon, and freshly ground black pepper.",
           "price": 12.99,
           "image": "https://img.freepik.com/free-photo/delicious-pasta-plate_23-2150690609.jpg?t=st=1744117401~exp=1744121001~hmac=24554544c90163f8f227f177eaa0d7090202678dd4f697faf286407cb3934213&w=1380"
         },
         {
           "name": "Penne Primavera",
-          "description": "Colorful penne pasta sautéed with a medley of fresh vegetables including bell peppers, zucchini, broccoli, and cherry tomatoes in a light garlic and olive oil sauce. A wholesome vegetarian delight with vibrant flavors.",
+          "description": "Colorful penne pasta sautéed with a medley of fresh vegetables including bell peppers, zucchini, broccoli, and cherry tomatoes in a light garlic and olive oil sauce.",
           "price": 11.99,
           "image": "https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19739.jpg?t=st=1744117438~exp=1744121038~hmac=09bf5fdec54352654fb2bdfed7516a43a5beae81fe080807cb3501db8bf299d0&w=1380"
         },
         {
           "name": "Chicken Alfredo",
-          "description": "Juicy grilled chicken strips served over a bed of fettuccine pasta, all smothered in a creamy Alfredo sauce made from butter, heavy cream, and parmesan cheese. A rich and indulgent comfort meal.",
+          "description": "Juicy grilled chicken strips served over a bed of fettuccine pasta, all smothered in a creamy Alfredo sauce made from butter, heavy cream, and parmesan cheese.",
           "price": 13.99,
-          "image": "https://img.freepik.com/free-photo/freshness-healthy-eating-homemade-vegetarian-pasta-generated-by-artificial-intelligence_188544-128803.jpg?t=st=1744117484~exp=1744121084~hmac=b69157d4211719f5aff039acfd5778b5fb64f8a9ce1339137a3aa7a8aef06120&w=1380"
+          "image": "https://img.freepik.com/premium-photo/classic-chicken-fettuccine-alfredo-food-photo_1036998-340819.jpg?w=1380"
         },
         {
           "name": "Lasagna",
-          "description": "Layers of tender pasta sheets, seasoned ground meat, savory tomato sauce, and gooey mozzarella and ricotta cheese baked to golden perfection. Served with a side of garlic bread for a truly satisfying experience.",
+          "description": "Layers of tender pasta sheets, seasoned ground meat, savory tomato sauce, and gooey mozzarella and ricotta cheese baked to golden perfection.",
           "price": 14.49,
           "image": "https://img.freepik.com/free-photo/classic-lasagna-with-bolognese-sauce_2829-11251.jpg?t=st=1744117523~exp=1744121123~hmac=49de624c1b1362a36ccb977e7d347c9bd378cdfc306a9f06a4997e2041ae6e07&w=1380"
         },
