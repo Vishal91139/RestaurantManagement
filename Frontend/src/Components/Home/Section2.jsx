@@ -1,4 +1,5 @@
 import React from 'react'
+import './Section2.css'
 import Food1 from '../../assets/Images/Food1.png'
 import Food2 from '../../assets/Menu/Breakfast/Breakfast3.png'
 import Food3 from '../../assets/Menu/Breakfast/Breakfast1.png'

@@ -13,10 +13,8 @@ const CartPage = () => {
     const [orderSuccess, setOrderSuccess] = useState(false);
     const [orderId, setOrderId] = useState(null);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
-    // We don't need paymentSuccess state anymore as we're using orderSuccess
     const navigate = useNavigate();
 
-    // Fetch cart items when the component mounts or when auth state changes
     useEffect(() => {
         if (isAuthenticated) {
             refreshCart();
@@ -26,12 +24,10 @@ const CartPage = () => {
     const handleAddToOrder = async () => {
         if (cartItems.length > 0) {
             try {
-                // Create order in backend
                 const newOrderId = await addOrder(cartItems);
 
                 if (newOrderId) {
                     setOrderId(newOrderId);
-                    // Show payment modal instead of clearing cart immediately
                     setShowPaymentModal(true);
                 }
             } catch (err) {
@@ -42,17 +38,10 @@ const CartPage = () => {
 
     const handlePaymentSuccess = async () => {
         try {
-            // Close payment modal
             setShowPaymentModal(false);
-
-            // Clear cart after successful payment
             await clearCart();
-
-            // Show success message
-            setPaymentSuccess(true);
             setOrderSuccess(true);
 
-            // Show success message for 2 seconds then redirect
             setTimeout(() => {
                 navigate('/order');
             }, 2000);
@@ -64,13 +53,10 @@ const CartPage = () => {
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    // Calculate additional charges
-    const taxRate = 0.08; // 8% tax rate
+    const taxRate = 0.08;
     const tax = subtotal * taxRate;
-    const deliveryFee = subtotal > 0 ? 2.99 : 0; // $2.99 delivery fee if cart is not empty
-    const serviceFee = subtotal > 0 ? 1.50 : 0; // $1.50 service fee if cart is not empty
-
-    // Calculate total price with all charges
+    const deliveryFee = subtotal > 0 ? 2.99 : 0;
+    const serviceFee = subtotal > 0 ? 1.50 : 0;
     const totalPrice = subtotal + tax + deliveryFee + serviceFee;
 
     return (
@@ -208,7 +194,6 @@ const CartPage = () => {
             )}
             </div>
 
-            {/* Payment Modal */}
             <PaymentModal
                 isOpen={showPaymentModal}
                 onClose={() => setShowPaymentModal(false)}

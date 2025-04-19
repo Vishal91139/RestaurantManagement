@@ -104,9 +104,10 @@ exports.createPayment = async (req, res) => {
 
         // Insert into payments table (using plain text as per original schema, VERY INSECURE)
         const [result] = await pool.query(
-            'INSERT INTO payments (order_id, cardholder_name, card_number, expiry_date, cvv, amount) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO payments (order_id, user_id, cardholder_name, card_number, expiry_date, cvv, amount) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [
                 order_id,
+                userId,
                 cardholder_name,
                 // encryptedCardNumber, // Use encrypted variable if implemented
                 // encryptedCvv,        // Use encrypted variable if implemented (BUT DON'T STORE CVV)

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { slider } from "../../DB/MenuDB";
-import "./Section3Styles.css";
+import "./Section3.css";
 
 const Section3 = () => {
   const [activeSection, setActiveSection] = useState(slider[0].section_name);
@@ -220,10 +220,8 @@ const Section3 = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay for readability */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* Animated headline with interesting typography */}
       <div className="absolute top-10 left-10 z-20 headline-container">
         <h2 className="text-white text-4xl font-extrabold tracking-wider headline-text">
           <span className="text-amber-400">Featured</span> Menu
@@ -231,8 +229,6 @@ const Section3 = () => {
         <div className="headline-underline"></div>
         <p className="headline-subtitle mt-2 text-white/80">Explore our chef's selections</p>
       </div>
-
-      {/* Category Slider */}
       <div className="h-[30%] flex items-end">
       <div
         ref={textScrollRef}
@@ -253,7 +249,6 @@ const Section3 = () => {
       </div>
       </div>
 
-      {/* Scale Pattern */}
       <div className="scale-pattern relative z-10 w-full overflow-hidden">
         <svg
           className="w-full h-8 scale-x-[1.06] scale-y-[-1]"
@@ -262,7 +257,6 @@ const Section3 = () => {
           preserveAspectRatio="none"
           style={{ background: 'transparent' }}
         >
-          {/* Large ticks */}
           {Array.from({ length: 16 }).map((_, i) => (
             <line
               key={`large-${i}`}
@@ -275,9 +269,7 @@ const Section3 = () => {
             />
           ))}
 
-          {/* Medium ticks */}
           {Array.from({ length: 61 }).map((_, i) => {
-            // Skip positions where large ticks are already placed
             if (i % 4 !== 0) {
               return (
                 <line
@@ -294,9 +286,7 @@ const Section3 = () => {
             return null;
           })}
 
-          {/* Small ticks */}
           {Array.from({ length: 121 }).map((_, i) => {
-            // Skip positions where medium or large ticks are already placed
             if (i % 2 !== 0) {
               return (
                 <line
@@ -314,8 +304,6 @@ const Section3 = () => {
           })}
         </svg>
       </div>
-
-      {/* Menu Item Slider */}
       <div className="w-full flex justify-center relative z-10 h-[56%]">
         <div className="w-[1300px] h-full flex relative px-6">
           <div ref={sliderContainerRef} className="slider-container flex items-center gap-x-28 overflow-x-auto" style={{ scrollSnapType: 'x mandatory', scrollBehavior: 'smooth', paddingLeft: 'calc(50% - 10vw)', paddingRight: 'calc(50% - 10vw)' }}>

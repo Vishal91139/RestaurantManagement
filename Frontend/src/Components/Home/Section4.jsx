@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './Section4.css'
 import { Link } from 'react-router-dom'
-
-// High-quality food images
+import leafIcon from '../../assets/Icons/leaf.svg'
+import starIcon from '../../assets/Icons/star.svg'
+import smallStarIcon from '../../assets/Icons/smallstar.svg'
 const foodItems = [
   {
     id: 1,
@@ -39,14 +40,13 @@ const Section4 = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // When section comes into view, start revealing items one by one
           const timer = setTimeout(() => {
             setVisibleItems([0]);
 
             const timers = foodItems.slice(1).map((_, index) => {
               return setTimeout(() => {
                 setVisibleItems(prev => [...prev, index + 1]);
-              }, (index + 1) * 400); // Stagger the animations
+              }, (index + 1) * 400);
             });
 
             return () => {
@@ -72,7 +72,6 @@ const Section4 = () => {
 
   return (
     <section className="newest-items" ref={sectionRef}>
-      {/* Background elements */}
       <div className="bg-pattern"></div>
       <div className="pattern-overlay-1"></div>
       <div className="pattern-overlay-2"></div>
@@ -81,19 +80,30 @@ const Section4 = () => {
       <div className="bg-accent accent-3"></div>
       <div className="bg-accent accent-4"></div>
 
-      {/* Floating elements */}
       <div className="floating-element floating-spoon"></div>
       <div className="floating-element floating-fork"></div>
       <div className="floating-element floating-plate"></div>
       <div className="floating-element floating-chef"></div>
       <div className="floating-element floating-pepper"></div>
 
-      {/* Food particles */}
       <div className="food-particle particle-1"></div>
       <div className="food-particle particle-2"></div>
       <div className="food-particle particle-3"></div>
       <div className="food-particle particle-4"></div>
       <div className="food-particle particle-5"></div>
+
+      {/* Leaf decorations */}
+      <img src={leafIcon} alt="Leaf" className="leaf-decoration leaf-1" />
+      <img src={leafIcon} alt="Leaf" className="leaf-decoration leaf-2" />
+      <img src={leafIcon} alt="Leaf" className="leaf-decoration leaf-3" />
+      <img src={leafIcon} alt="Leaf" className="leaf-decoration leaf-4" />
+
+      {/* Star decorations */}
+      <img src={starIcon} alt="Star" className="star-decoration star-1" />
+      <img src={starIcon} alt="Star" className="star-decoration star-2" />
+      <img src={smallStarIcon} alt="Small Star" className="star-decoration small-star-1" />
+      <img src={smallStarIcon} alt="Small Star" className="star-decoration small-star-2" />
+      <img src={smallStarIcon} alt="Small Star" className="star-decoration small-star-3" />
 
       <div className="newest-items-container">
         <div className="newest-items-header">
@@ -110,6 +120,10 @@ const Section4 = () => {
             className={`item-row ${visibleItems.includes(index) ? 'visible' : ''}`}
             ref={el => itemRefs.current[index] = el}
           >
+            {/* Item-specific decorations */}
+            {index === 0 && <img src={leafIcon} alt="Leaf" className="item-decoration item-leaf-1" />}
+            {index === 1 && <img src={starIcon} alt="Star" className="item-decoration item-star-1" />}
+            {index === 2 && <img src={smallStarIcon} alt="Small Star" className="item-decoration item-small-star-1" />}
             <div className="item-image-container">
               <img
                 src={item.image}

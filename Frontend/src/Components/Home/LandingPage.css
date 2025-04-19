@@ -1,0 +1,70 @@
+.text-1{
+    font-family: "Irish Grover", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    color:white;
+  }
+  
+  .text-2 {
+    font-family: "Winky Sans", sans-serif;
+    font-size:16px ;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0.3px;
+  }
+  
+  .bottomleft {
+    font-family: "Winky Sans", sans-serif;
+    font-size:14px;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    line-height: 20px;
+  }
+  
+  .bottomleft::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 90%;
+    background-color: white;
+    left:-25px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity:50%;
+  }
+  
+  .circulartext {
+    word-spacing: 10px;
+    letter-spacing: 4px;
+    font-size: 20px;
+    font-family: "Winky Sans", sans-serif;
+    font-weight:400;
+  }
+  
+  .animate-spin-slow {
+  animation: spin 15s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .animate-button {
+  animation: button 70s linear infinite reverse;
+  }
+  
+  @keyframes button {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

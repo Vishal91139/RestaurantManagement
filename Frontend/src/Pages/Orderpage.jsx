@@ -67,7 +67,7 @@ const OrderPage = () => {
             );
         }
 
-        // Animate order items if they exist
+
         if (orderRefs.current.length > 0) {
             gsap.fromTo(orderRefs.current,
                 { y: 20, opacity: 0 },
@@ -167,7 +167,7 @@ const OrderPage = () => {
                 <h2 className="order-subtitle slide-up">Your Flavor Journey Continues!</h2>
             </div>
 
-            {/* Main Content */}
+
             <div className="order-content" ref={contentRef}>
                 {loading ? (
                     <div className="order-loading fade-in">
@@ -185,9 +185,9 @@ const OrderPage = () => {
                             Log In
                         </Link>
                     </div>
-                ) : orders.length > 0 ? (
+                ) : orders.filter(order => order.status === 'paid').length > 0 ? (
                     <div className="order-list">
-                        {orders.map((order, index) => (
+                        {orders.filter(order => order.status === 'paid').map((order, index) => (
                             <div
                                 key={index}
                                 className="order-card slide-in-right"
@@ -237,7 +237,7 @@ const OrderPage = () => {
                                             ))
                                         )}
 
-                                        {/* Show View More/Less button if there are more than 2 items */}
+
                                         {order.items.length > 2 && (
                                             <button
                                                 className="view-more-btn"
@@ -292,8 +292,8 @@ const OrderPage = () => {
                     </div>
                 ) : (
                     <div className="empty-orders fade-in">
-                        <h2 className="empty-orders-title">No Orders Yet</h2>
-                        <p>You haven't placed any orders yet. Start exploring our delicious menu!</p>
+                        <h2 className="empty-orders-title">No Completed Orders</h2>
+                        <p>You don't have any paid orders yet. Pending orders will appear in your cart until payment is completed.</p>
                         <Link to='/menu' className="empty-orders-link">
                             Start Shopping
                         </Link>

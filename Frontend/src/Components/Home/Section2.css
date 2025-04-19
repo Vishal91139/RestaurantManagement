@@ -1,0 +1,35 @@
+.text-3{
+    font-family: "Simonetta";
+    line-height: 110px;
+    word-spacing: 10px;
+    font-size: 7vw;
+    margin-bottom: 5vh;
+    }
+    
+    .text-3::after{
+    content: "";
+    position :absolute;
+    width: 50vw;
+    height:1.8px;
+    background-color: black;
+    top:48vh;
+    color: rgb(255, 202, 103);
+    }
+    
+    .food{
+    filter:drop-shadow(-2px -1px 15px rgba(255, 202, 103, 0.5)) drop-shadow(-2px 1px 15px rgba(255, 202, 103, 0.5));
+    }
+    
+    .foodbg{
+    border-radius: 57% 43% 47% 53% / 58% 57% 43% 42% ;
+    }
+    
+    .text-4{
+    font-family: "Winky Sans", sans-serif;
+    font-size:20px;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    }
+    
+    

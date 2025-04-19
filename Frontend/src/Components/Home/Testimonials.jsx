@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Testimonials.css';
 
-// Import your images here
-// These are placeholders - replace with your actual image imports
-import customerImage1 from '../../assets/Images/Food1.png';
-import customerImage2 from '../../assets/Images/Food1.png';
-import customerImage3 from '../../assets/Images/Food1.png';
+import customerImage1 from '../../assets/Icons/userIcon.svg';
+import customerImage2 from '../../assets/Icons/userIcon.svg';
+import customerImage3 from '../../assets/Icons/userIcon.svg';
 
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -13,7 +11,7 @@ const Testimonials = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
   const intervalRef = useRef(null);
-  
+
   const testimonials = [
     {
       id: 1,
@@ -40,8 +38,7 @@ const Testimonials = () => {
       rating: 5
     }
   ];
-  
-  // Check if section is visible
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -51,19 +48,18 @@ const Testimonials = () => {
       },
       { threshold: 0.3 }
     );
-    
+
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
-    
+
     return () => {
       if (sectionRef.current) {
         observer.unobserve(sectionRef.current);
       }
     };
   }, []);
-  
-  // Auto-rotate testimonials
+
   useEffect(() => {
     if (isVisible) {
       intervalRef.current = setInterval(() => {
@@ -72,54 +68,50 @@ const Testimonials = () => {
         }
       }, 6000);
     }
-    
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
   }, [isVisible, isAnimating]);
-  
+
   const nextTestimonial = () => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
     setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    
-    // Reset animation flag after transition completes
+
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
   };
-  
+
   const prevTestimonial = () => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    
-    // Reset animation flag after transition completes
+
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
   };
-  
+
   const goToTestimonial = (index) => {
     if (isAnimating || index === activeIndex) return;
-    
+
     setIsAnimating(true);
     setActiveIndex(index);
-    
-    // Reset animation flag after transition completes
+
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
   };
-  
-  // Render stars for ratings
+
   const renderStars = (rating) => {
     const stars = [];
-    
+
     for (let i = 1; i <= 5; i++) {
       stars.push(
         <span key={i} className={i <= rating ? "star filled" : "star"}>
@@ -127,10 +119,10 @@ const Testimonials = () => {
         </span>
       );
     }
-    
+
     return stars;
   };
-  
+
   return (
     <section className="testimonials " ref={sectionRef}>
       <div className="testimonials-container ">
@@ -138,7 +130,7 @@ const Testimonials = () => {
           <h2 className="testimonials-subtitle">What Our Guests Say</h2>
           <h1 className="testimonials-title">Customer Testimonials</h1>
         </div>
-        
+
         <div className="testimonials-carousel">
           <div className="testimonials-track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
             {testimonials.map((testimonial, index) => (
@@ -149,14 +141,14 @@ const Testimonials = () => {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                     </svg>
                   </div>
-                  
+
                   <p className="testimonial-quote">{testimonial.quote}</p>
-                  
+
                   <div className="testimonial-rating">
                     {renderStars(testimonial.rating)}
                   </div>
                 </div>
-                
+
                 <div className="testimonial-author">
                   <div className="author-image">
                     <img src={testimonial.image} alt={testimonial.name} />
@@ -169,9 +161,9 @@ const Testimonials = () => {
               </div>
             ))}
           </div>
-          
-          <button 
-            className="testimonial-arrow prev" 
+
+          <button
+            className="testimonial-arrow prev"
             onClick={prevTestimonial}
             aria-label="Previous testimonial"
           >
@@ -179,9 +171,9 @@ const Testimonials = () => {
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          
-          <button 
-            className="testimonial-arrow next" 
+
+          <button
+            className="testimonial-arrow next"
             onClick={nextTestimonial}
             aria-label="Next testimonial"
           >
@@ -191,7 +183,7 @@ const Testimonials = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="testimonials-background">
         <div className="bg-pattern"></div>
         <div className="bg-accent accent-1"></div>
