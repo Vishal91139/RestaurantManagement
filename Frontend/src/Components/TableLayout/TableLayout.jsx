@@ -208,7 +208,6 @@ const TableLayout = () => {
     <div>
       {/* Advanced Date and Time Selector */}
       <div className="advanced-date-time-selector">
-        <div className="selector-instructions">Select date and time to find available tables:</div>
         <div className="selector-content">
           <div className="date-selector">
             <div className="date-label">Date</div>

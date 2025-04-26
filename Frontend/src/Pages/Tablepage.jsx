@@ -4,7 +4,7 @@ import { gsap } from 'gsap'
 import './TablePage.css'
 
 const Tablepage = () => {
-  // Create refs for GSAP animations
+  // refs for GSAP animations
   const containerRef = useRef(null);
   const headerRef = useRef(null);
   const contentRef = useRef(null);

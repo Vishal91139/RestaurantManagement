@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   /* align-items: center; */
-  padding: 20px 0px;
+  /* padding: 20px 0px; */
 }
 
 .signup-card {
@@ -17,7 +17,7 @@
   width: 100%;
   max-width: 450px;
   margin-top:10vh;
-  padding: 40px;
+  padding: 10px 40px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 106, 0, 0.1);
@@ -41,7 +41,6 @@
 
 .signup-header {
   text-align: center;
-  margin-bottom: 30px;
 }
 
 .signup-title {
@@ -58,16 +57,16 @@
 }
 
 .signup-form {
-  margin-top: 20px;
+  margin-top: 10px;
 }
-
+/* 
 .form-group {
-  margin-bottom: 20px;
-}
+  margin-bottom: 200px;
+} */
 
 .form-label {
   display: block;
-  margin-bottom: 8px;
+  /* margin-bottom: 4px; */
   font-size: 0.9rem;
   color: #555;
   font-weight: 500;
@@ -118,7 +117,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
